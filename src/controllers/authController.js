@@ -98,6 +98,32 @@ class AuthController {
         }
     }
 
+    // Deletar um usuário pelo ID
+    async deleteUser(req, res) {
+        try {
+            const { id } = req.params;
+
+            // Verifica se o ID foi fornecido
+            if (!id) {
+                return res.status(400).json({ error: "ID do usuário é obrigatório" });
+            }
+
+            // Verifica se o usuário existe
+            const user = await UserModel.findById(id);
+            if (!user) {
+                return res.status(404).json({ error: "Usuário não encontrado" });
+            }
+
+            // Deleta o usuário
+            await UserModel.delete(id);
+
+            return res.json({ message: "Usuário deletado com sucesso!" });
+        } catch (error) {
+            console.error("Erro ao deletar usuário:", error);
+            res.status(500).json({ error: "Erro ao deletar usuário" });
+        }
+    }
+
 }
 
 export default new AuthController();
