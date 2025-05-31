@@ -3,10 +3,29 @@ import prisma from '../../prisma/prisma.js';
 class UserModel {
     // Obter todos os usuários
     async findAll() {
-        const users = await prisma.user.findMany();
+    try {
+      const users = await prisma.user.findMany({
+        include: {
+          gas: {
+            select: {
+              gasTipo: true,
+              gasPrecisa: true,
+            },
+          }
+        },
+      });
 
-        return users;
+      // Serializa BigInt (cellPhone) para string
+      const serializedUsers = JSON.parse(JSON.stringify(users, (_, value) =>
+        typeof value === 'bigint' ? value.toString() : value
+      ));
+
+      return serializedUsers;
+    } catch (error) {
+      console.error('Erro ao buscar todos os usuários:', error.message, error.stack);
+      throw error;
     }
+  }
 
     async findById(id) {
         const user = await prisma.user.findUnique({
