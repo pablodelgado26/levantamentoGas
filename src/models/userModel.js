@@ -8,7 +8,6 @@ class UserModel {
         return users;
     }
 
-    // Obter um usuário pelo ID
     async findById(id) {
         const user = await prisma.user.findUnique({
             where: {
@@ -20,10 +19,10 @@ class UserModel {
     }
 
     // Obter um usuário pelo email
-    async findByEmail(email) {
+    async findByUserName(userName) {
         const user = await prisma.user.findUnique({
             where: {
-                email,
+                userName,
             },
         });
 
@@ -39,17 +38,6 @@ class UserModel {
         return user;
     }
 
-    // Atualizar um usuário
-    async update(id, data) {
-        const user = await prisma.user.update({
-            where: {
-                id: Number(id)
-            },
-            data
-        });
-
-        return user;
-    }
 
     // Excluir um usuário
     async delete(id) {

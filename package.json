@@ -1,7 +1,7 @@
 {
-  "name": "api-boilerplate",
+  "name": "api-levantamento-gas",
   "version": "1.0.0",
-  "description": "Projeto base de uma API com MVC",
+  "description": "API for managing gas station data",
   "keywords": [
     "nodejs",
     "javascript",
@@ -13,11 +13,7 @@
   "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/server.js",
-    "prisma:seed": "node prisma/seed/seed.js"
-  },
-  "prisma": {
-    "seed": "node prisma/seed/seed.js"
+    "dev": "nodemon src/server.js"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",

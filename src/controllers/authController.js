@@ -18,18 +18,18 @@ class AuthController {
     //Registrar um novo usuário
     async register(req, res) {
         try {
-            const { name, email, password } = req.body;
+            const { userName, password } = req.body;
 
             // Validação básica
-            if (!name || !email || !password) {
-                return res.status(400).json({ error: "Os campos nome, email ou senha são obrigatórios" });
+            if ( !userName || !password) {
+                return res.status(400).json({ error: "Nome da escola ou senha são obrigatórios" });
             }
 
             //Verificar se o usuário ja existe 
-            const userExists = await UserModel.findByEmail(email)
+            const userExists = await UserModel.findByUserName(userName)
 
             if (userExists) {
-                return res.status(400).json({ error: "Este email já está em uso!" })
+                return res.status(400).json({ error: "Escreveu o nome da escola errada, tente novamente" })
             }
 
             //hash da senha
@@ -37,8 +37,7 @@ class AuthController {
 
             //Criar o objeto do usuário
             const data = {
-                name,
-                email,
+                userName,
                 password: hashedPassword,
             };
 
@@ -57,15 +56,15 @@ class AuthController {
 
     async login(req, res) {
         try {
-            const { email, password } = req.body
+            const { userName, password } = req.body
 
             // Validação básica
-            if (!email || !password) {
-                return res.status(400).json({ error: "Os campos email e senha são obrigatórios" });
+            if (!userName || !password) {
+                return res.status(400).json({ error: "Os campos nome da escola e senha são obrigatórios" });
             }
 
             //Verificar se o usuário existe 
-            const userExists = await UserModel.findByEmail(email)
+            const userExists = await UserModel.findByUserName(userName)
             if (!userExists) {
                 return res.status(401).json({ error: "Credenciais inválidas!" })
             }
@@ -80,8 +79,7 @@ class AuthController {
             const token = jwt.sign(
                 {
                     id: userExists.id,
-                    name: userExists.name,
-                    email: userExists.email,
+                    userName: userExists.userName,
                 },
                 process.env.JWT_SECRET,
                 {

@@ -9,51 +9,36 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model Collection {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique
-  description String?
-  releaseYear Int
-
-  // Segundo: marcação da lista de dados da tabela dependente
-  cards Card[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("collections")
-}
-
-model Card {
-  id            Int     @id @default(autoincrement())
-  name          String  @unique
-  rarity        String
-  attackPoints  Int
-  defensePoints Int
-  imageUrl      String?
-
-  // Primeiro: configuração da tabela dependente
-  collectionId Int      
-  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("cards")
-}
 
 model User {
   id Int @id @default(autoincrement())
-  name String
-  email String @unique
+
+  userName String @unique
   password String
+
+  gas Gas[]
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("users")
+}
+
+model Gas {
+  id Int @id @default(autoincrement())
+
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+
+  gasPrecisa Boolean @default(false)
+  gasTipo String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("gas")
 }
