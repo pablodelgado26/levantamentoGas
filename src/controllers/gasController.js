@@ -1,4 +1,5 @@
 import gasModel from '../models/gasModel.js';
+import { gerarPlanilha } from '../services/planilhaService.js';
 
 class GasController {
   // Listar todos os registros de gás
@@ -67,6 +68,34 @@ class GasController {
       return res.status(500).json({ error: error.message });
     }
   }
+
+  // Gerar relatório em planilha
+  async gerarRelatorio(req, res) {
+    try {
+      const dados = {
+        data: '30/05/2025',
+        rota: '2',
+        nutricionista: 'MÔNIC DELGADO',
+        escolas: [
+          { id: '01', nome: 'CEMEI ANA THOMÉ MAMPRIN', p45: 1, p13: '' },
+          { id: '02', nome: 'EMEB HELOISA C. CRISSIUMA', p45: 0, p13: '' },
+          { id: '03', nome: 'EMEB DOM BOSCO', p45: 1, p13: '' },
+          { id: '04', nome: 'EMEB JORGE B. DE CASTRO', p45: 0, p13: '' },
+          { id: '05', nome: 'EMEB ALICE SULI NONATO', p45: 1, p13: '' },
+          { id: '06', nome: 'EMEB TIO PEDRO BRANDINI', p45: 0, p13: '' },
+          { id: '07', nome: 'EMEB PADRE LEOPOLDO PETRUS', p45: 0, p13: '' },
+          { id: '08', nome: 'EMEB LUIZ ANTONIAZZI', p45: 0, p13: '' },
+          { id: '09', nome: 'EMEB FANY MOLETTA', p45: 0, p13: '' },
+          { id: '10', nome: 'EMEB PROF. EDINA BAMPA', p45: 0, p13: '' },
+          { id: '11', nome: 'EMEB NEIZE Q. MATHEDI', p45: 0, p13: 1 },
+        ],
+      };
+      await gerarPlanilha(dados, res);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
 
   // Remover um registro de gás
   async delete(req, res) {

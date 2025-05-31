@@ -7,6 +7,8 @@ const gasRouter = express.Router();
 // GET /colecoes - Listar todas as Coleções
 gasRouter.get("/", gasController.findAll);
 
+gasRouter.get('/gerar-relatorio', gasController.gerarRelatorio);
+
 // GET /colecoes/:id - Obter uma Coleção pelo ID
 gasRouter.get("/:id", gasController.findById);
 
