@@ -15,12 +15,7 @@ class UserModel {
         },
       });
 
-      // Serializa BigInt (cellPhone) para string
-      const serializedUsers = JSON.parse(JSON.stringify(users, (_, value) =>
-        typeof value === 'bigint' ? value.toString() : value
-      ));
-
-      return serializedUsers;
+      return users;
     } catch (error) {
       console.error('Erro ao buscar todos os usuários:', error.message, error.stack);
       throw error;
