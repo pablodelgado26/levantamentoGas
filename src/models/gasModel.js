@@ -3,12 +3,11 @@ import prisma from "../../prisma/prisma.js";
 class GasModel {
   // Obter todas as gas
   async findAll() {
-    const gas = await prisma.gas.findMany({
-    });
+    const gas = await prisma.gas.findMany();
     return gas;
   }
 
-    // Obter uma gas pelo ID
+  // Obter uma gas pelo ID
   async findById(id) {
     const gas = await prisma.gas.findUnique({
       where: {
@@ -20,30 +19,31 @@ class GasModel {
   }
 
   // Criar uma nova gas
-async create(gasPrecisa, gasTipo, userName) {
-  // Busca o usuário pelo userName
-  const user = await prisma.user.findUnique({
-    where: { userName },
-  });
+  async create(gasPrecisa, gasTipo, userName) {
+    // Busca o usuário pelo userName
+    const user = await prisma.user.findUnique({
+      where: { userName },
+    });
 
-  if (!user) {
-    throw new Error('Usuário não encontrado');
+    if (!user) {
+      throw new Error('Usuário não encontrado');
+    }
+
+    // Cria o registro de Gas associado ao userId encontrado
+    const novaGas = await prisma.gas.create({
+      data: {
+        gasPrecisa,
+        gasTipo,
+        user: {
+          connect: { id: user.id }
+        }
+      },
+    });
+
+    return novaGas;
   }
 
-  // Cria o registro de Gas associado ao userId encontrado
-  const novaGas = await prisma.gas.create({
-    data: {
-      gasPrecisa,
-      gasTipo,
-      user: {
-        connect: { id: user.id } // Faz a conexão pela relação
-      }
-    },
-  });
-
-  return novaGas;
-}
-  // Método para resetar gasPrecisa para false em todos os registros (ex: quando o token acabar)
+  // Método para resetar gasPrecisa para false em todos os registros
   async resetGasPrecisa() {
     await prisma.gas.updateMany({
       data: {
@@ -51,7 +51,6 @@ async create(gasPrecisa, gasTipo, userName) {
       },
     });
   }
-
 
   // Remover uma gas
   async delete(id) {
@@ -68,6 +67,22 @@ async create(gasPrecisa, gasTipo, userName) {
     });
 
     return true;
+  }
+
+  // Buscar dados com usuário (para planilha)
+  async buscarDadosGas() {
+    const dados = await prisma.gas.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            userName: true
+          }
+        }
+      }
+    });
+
+    return dados;
   }
 }
 

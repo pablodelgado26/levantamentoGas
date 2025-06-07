@@ -2,20 +2,25 @@ import express from "express";
 import gasController from "../controllers/gasController.js";
 
 const gasRouter = express.Router();
+gasRouter.get("/planilha", gasController.gerarPlanilha);
 
-// Rotas de Coleções
-// GET /colecoes - Listar todas as Coleções
+// Rotas de Gas
+// GET /gas - Listar todos os registros de gás
 gasRouter.get("/", gasController.findAll);
 
-gasRouter.get('/gerar-relatorio', gasController.gerarRelatorio);
 
-// GET /colecoes/:id - Obter uma Coleção pelo ID
+// GET /gas/:id - Obter um registro de gás pelo ID
 gasRouter.get("/:id", gasController.findById);
 
-// POST /colecoes - Criar uma nova Cards
+// POST /gas - Criar um novo registro de gás
 gasRouter.post("/", gasController.create);
 
-// DELETE /colecoes/:id - Remover um Cards
+// PUT /gas/reset - Resetar gasPrecisa para false em todos os registros
+gasRouter.put("/reset", gasController.resetGasPrecisa);
+
+// DELETE /gas/:id - Remover um registro de gás
 gasRouter.delete("/:id", gasController.delete);
+
+// ✅ GET /gas/planilha - Gerar e baixar planilha de levantamento de gás
 
 export default gasRouter;
